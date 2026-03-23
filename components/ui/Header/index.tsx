@@ -1,10 +1,11 @@
+import Link from "next/link";
 import Logo from "../icons/Logo";
 import PersonalBest from "../icons/PersonalBest";
 
 export default function Header() {
   return (
     <header className="flex items-center justify-between mt-4 mb-8">
-      <a href="/" className="flex items-center gap-2">
+      <Link href="/" className="flex items-center gap-2">
         <Logo />
         <div>
           <h1 className="text-lg font-bold">Typing Speed Test</h1>
@@ -12,7 +13,7 @@ export default function Header() {
             Digite o mais rápido que conseguir em 60 segundos
           </p>
         </div>
-      </a>
+      </Link>
 
       <div className="flex items-center gap-2 ">
         <PersonalBest />

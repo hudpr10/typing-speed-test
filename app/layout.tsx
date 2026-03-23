@@ -16,19 +16,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR">
-      <GameProvider>
-        <body className={`${sora.variable} antialiased`}>
+    <html lang="pt-BR" className={`${sora.variable} antialiased`}>
+      <body>
+        <GameProvider>
           <main className="max-w-360 mx-auto w-full px-4 font-sans">
             <Header />
             {children}
           </main>
-        </body>
-      </GameProvider>
+        </GameProvider>
+      </body>
     </html>
   );
 }

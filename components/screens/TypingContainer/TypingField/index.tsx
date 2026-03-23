@@ -84,7 +84,7 @@ export default function TypingField() {
           <div className="absolute inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center flex-col">
             <Button handleClick={startGame}>Começar Typing Text</Button>
             <span className="text-base mt-2">
-              ou pressione "Espaço" para começar
+              ou pressione &quot;Espaço&quot; para começar
             </span>
           </div>
         )}
@@ -92,7 +92,7 @@ export default function TypingField() {
 
       {isRunning && (
         <div className="flex justify-center mt-4">
-          <Button handleClick={resetGame} style="secondary">
+          <Button handleClick={resetGame} style="ghost">
             Recomeçar <Restart />
           </Button>
         </div>

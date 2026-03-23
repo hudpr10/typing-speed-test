@@ -1,32 +1,37 @@
 export default function Completed() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="64"
-      height="64"
-      fill="none"
-      viewBox="0 0 64 64"
-    >
-      <g clipPath="url(#a)">
-        <path
-          fill="#121212"
-          d="M0 32C0 14.327 14.327 0 32 0s32 14.327 32 32-14.327 32-32 32S0 49.673 0 32"
-        />
-        <path
-          fill="#4dd67b"
-          fillRule="evenodd"
-          d="M45.45 26.01 29.895 41.567a2.51 2.51 0 0 1-1.785.741c-.65 0-1.294-.245-1.79-.74l-7.777-7.778a2.527 2.527 0 0 1 3.57-3.574l5.997 5.992 13.766-13.77a2.527 2.527 0 1 1 3.574 3.574M32 0C14.356 0 0 14.356 0 32c0 17.647 14.356 32 32 32s32-14.353 32-32C64 14.356 49.644 0 32 0"
-          clipRule="evenodd"
-        />
-      </g>
-      <defs>
-        <clipPath id="a">
+    <div className="relative h-28 w-28 flex justify-center items-center">
+      <div className="bg-green-500 rounded-full w-22 h-22 opacity-20 absolute z-0"></div>
+      <div className="bg-green-500 rounded-full w-28 h-28 opacity-10 absolute z-1"></div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="64"
+        height="64"
+        fill="none"
+        viewBox="0 0 64 64"
+        className="absolute z-2"
+      >
+        <g clipPath="url(#a)">
           <path
-            fill="#fff"
+            fill="#121212"
             d="M0 32C0 14.327 14.327 0 32 0s32 14.327 32 32-14.327 32-32 32S0 49.673 0 32"
           />
-        </clipPath>
-      </defs>
-    </svg>
+          <path
+            fill="#4dd67b"
+            fillRule="evenodd"
+            d="M45.45 26.01 29.895 41.567a2.51 2.51 0 0 1-1.785.741c-.65 0-1.294-.245-1.79-.74l-7.777-7.778a2.527 2.527 0 0 1 3.57-3.574l5.997 5.992 13.766-13.77a2.527 2.527 0 1 1 3.574 3.574M32 0C14.356 0 0 14.356 0 32c0 17.647 14.356 32 32 32s32-14.353 32-32C64 14.356 49.644 0 32 0"
+            clipRule="evenodd"
+          />
+        </g>
+        <defs>
+          <clipPath id="a">
+            <path
+              fill="#fff"
+              d="M0 32C0 14.327 14.327 0 32 0s32 14.327 32 32-14.327 32-32 32S0 49.673 0 32"
+            />
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
   );
 }

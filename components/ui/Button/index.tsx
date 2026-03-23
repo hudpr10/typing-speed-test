@@ -1,6 +1,6 @@
 type ButtonProps = {
   children: React.ReactNode;
-  style?: "primary" | "secondary";
+  style?: "primary" | "secondary" | "ghost";
   handleClick: () => void;
 };
 
@@ -9,9 +9,22 @@ export default function Button({
   style = "primary",
   handleClick,
 }: ButtonProps) {
+  const bgColor = () => {
+    switch (style) {
+      case "primary":
+        return "bg-blue-500";
+      case "secondary":
+        return "bg-white text-black";
+      case "ghost":
+        return "bg-custom-black";
+      default:
+        return "bg-custom-black";
+    }
+  };
+
   return (
     <button
-      className={`flex items-center gap-2 px-4 py-1 0 rounded-lg cursor-pointer hover:opacity-80 transition-opacity text-base ${style === "primary" ? "bg-blue-500" : "bg-custom-black"}`}
+      className={`flex items-center gap-2 px-4 py-2 0 rounded-lg cursor-pointer hover:opacity-80 transition-opacity text-base ${bgColor()}`}
       onClick={() => {
         handleClick();
       }}
