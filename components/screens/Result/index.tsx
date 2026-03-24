@@ -3,26 +3,11 @@ import Completed from "@/components/ui/icons/Completed";
 import Restart from "@/components/ui/icons/Restart";
 import ResultCard from "@/components/ui/ResultCard";
 import { useGame } from "@/context/GameContext";
+import getCorrectAndWrongChars from "@/utils/getCorrectAndWrongChars";
 
 export default function Result() {
-  const { wpm, accuracy, typed, sentence } = useGame();
-
-  function getCorrectAndWrongChars(typed: string, sentence: string) {
-    const chars = {
-      correct: 0,
-      wrong: 0,
-    };
-
-    for (let i = 0; i < sentence.length; i++) {
-      if (sentence[i] === typed[i]) {
-        chars.correct++;
-      } else {
-        chars.wrong++;
-      }
-    }
-
-    return chars;
-  }
+  const { stats, typed, sentence, resetGame } = useGame();
+  const { correct, wrong } = getCorrectAndWrongChars(typed, sentence);
 
   return (
     <div className="flex flex-col items-center">
@@ -35,18 +20,22 @@ export default function Result() {
         </p>
       </div>
 
-      <ul className="flex gap-4 mt-8">
-        <ResultCard label="PPM" value={wpm.toString()} style="wpm" />
+      <ul className="flex gap-4 my-8">
+        <ResultCard label="PPM" value={stats.wpm.toString()} style="wpm" />
         <ResultCard
           label="Precisão"
-          value={`${accuracy.toString()}%`}
+          value={`${stats.accuracy}%`}
           style="accuracy"
         />
-        <ResultCard label="Caracteres" value="120/5" style="characters" />
+        <ResultCard
+          label="Caracteres"
+          value={`${correct}/${wrong}`}
+          style="characters"
+        />
       </ul>
 
-      <Button handleClick={() => {}} style="secondary">
-        Tentar Novamente <Restart />
+      <Button handleClick={resetGame} style="secondary">
+        Tentar Novamente <Restart fill="#000" />
       </Button>
     </div>
   );

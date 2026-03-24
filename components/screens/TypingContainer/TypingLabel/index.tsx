@@ -6,20 +6,19 @@ import { Difficulty, GameMode } from "@/types/game";
 import timeFormat from "@/utils/timeFormat";
 
 export default function TypingLabel() {
-  const { wpm, accuracy, setDifficulty, gameMode, setGameMode, timeLeft } =
-    useGame();
+  const { stats, setDifficulty, gameMode, setGameMode, timeLeft } = useGame();
 
   return (
     <div className="flex items-center justify-between">
       <ul className="flex divide-x divide-gray-400 gap-4">
         <li className="pr-4">
           <p className="text-gray-400">
-            PPM: <strong className="text-white">{wpm}</strong>
+            PPM: <strong className="text-white">{stats.wpm}</strong>
           </p>
         </li>
         <li className="pr-4">
           <p className="text-gray-400">
-            Precisão: <strong className="text-white">{accuracy}%</strong>
+            Precisão: <strong className="text-white">{stats.accuracy}%</strong>
           </p>
         </li>
         {gameMode === "time" && (

@@ -1,8 +1,12 @@
+"use client";
 import Link from "next/link";
 import Logo from "../icons/Logo";
 import PersonalBest from "../icons/PersonalBest";
+import { useGame } from "@/context/GameContext";
 
 export default function Header() {
+  const { record } = useGame();
+
   return (
     <header className="flex items-center justify-between mt-4 mb-8">
       <Link href="/" className="flex items-center gap-2">
@@ -15,12 +19,15 @@ export default function Header() {
         </div>
       </Link>
 
-      <div className="flex items-center gap-2 ">
-        <PersonalBest />
-        <p className="text-gray-400">
-          Recorde Pessoal: <strong className="text-white">92 PPM</strong>
-        </p>
-      </div>
+      {record !== -1 && (
+        <div className="flex items-center gap-2 ">
+          <PersonalBest />
+          <p className="text-gray-400">
+            Recorde Pessoal:{" "}
+            <strong className="text-white">{record} PPM</strong>
+          </p>
+        </div>
+      )}
     </header>
   );
 }

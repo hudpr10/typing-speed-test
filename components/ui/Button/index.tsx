@@ -14,7 +14,7 @@ export default function Button({
       case "primary":
         return "bg-blue-500";
       case "secondary":
-        return "bg-white text-black";
+        return "bg-white text-background";
       case "ghost":
         return "bg-custom-black";
       default:
@@ -24,7 +24,7 @@ export default function Button({
 
   return (
     <button
-      className={`flex items-center gap-2 px-4 py-2 0 rounded-lg cursor-pointer hover:opacity-80 transition-opacity text-base ${bgColor()}`}
+      className={`flex items-center gap-2 px-4 py-2 0 rounded-lg cursor-pointer hover:opacity-80 transition-opacity text-base font-bold ${bgColor()}`}
       onClick={() => {
         handleClick();
       }}

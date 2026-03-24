@@ -2,14 +2,23 @@
 import { Difficulty, GameMode } from "@/types/game";
 import calculateAccuracy from "@/utils/calculateAccuracy";
 import calculateWpm from "@/utils/calculateWPM";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
+type GameStats = {
+  wpm: number;
+  accuracy: number;
+  isFinished: boolean;
+};
 
 type GameContextType = {
   sentence: string;
-  wpm: number;
-  setWpm: (wpm: number) => void;
-  accuracy: number;
-  setAccuracy: (accuracy: number) => void;
+  stats: GameStats;
   typed: string;
   setTyped: (typed: string) => void;
   difficulty: Difficulty;
@@ -18,7 +27,7 @@ type GameContextType = {
   setGameMode: (value: GameMode) => void;
   timeLeft: number;
   isRunning: boolean;
-  isFinished: boolean;
+  record: number;
 
   startGame: () => void;
   resetGame: () => void;
@@ -29,66 +38,92 @@ const GameContext = createContext({} as GameContextType);
 export function GameProvider({ children }: { children: React.ReactNode }) {
   const sentence = "Fim.";
 
-  const [wpm, setWpm] = useState(0);
-  const [accuracy, setAccuracy] = useState(100);
+  const [stats, setStats] = useState<GameStats>({
+    wpm: 0,
+    accuracy: 100,
+    isFinished: false,
+  });
+
   const [typed, setTyped] = useState("");
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   const [gameMode, setGameMode] = useState<GameMode>("time");
-  const [isFinished, setIsFinhised] = useState<boolean>(false);
 
-  // Tempo
   const [startTime, setStartTime] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState(60);
   const [isRunning, setIsRunning] = useState(false);
 
-  useEffect(() => {
-    setAccuracy(calculateAccuracy(typed, sentence));
-    if (startTime) setWpm(calculateWpm(typed, sentence, startTime));
-    if (typed.length === sentence.length) finishGame();
-  }, [typed]);
-
-  useEffect(() => {
-    if (!isRunning || !startTime) return;
-
-    if (timeLeft === 0) {
-      finishGame();
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-      setWpm(calculateWpm(typed, sentence, startTime));
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isRunning, timeLeft, startTime]);
+  const [record, setRecord] = useState<number>(() => {
+    const storage = localStorage.getItem("record") ?? -1;
+    return Number(storage);
+  });
 
   function startGame() {
     if (!isRunning) setIsRunning(true);
     setStartTime(Date.now());
   }
 
+  const finishGame = useCallback(() => {
+    setIsRunning(false);
+    setStats((prev) => ({ ...prev, isFinished: true }));
+  }, []);
+
   function resetGame() {
-    finishGame();
+    setIsRunning(false);
     setTimeLeft(60);
     setStartTime(null);
     setTyped("");
-    setWpm(0);
+    setStats({ wpm: 0, accuracy: 0, isFinished: false });
   }
 
-  function finishGame() {
-    setIsRunning(false);
-    setIsFinhised(true);
-  }
+  // Referente ao tempo decorrido
+  useEffect(() => {
+    if (!isRunning || !startTime) return;
+
+    const interval = setInterval(() => {
+      if (timeLeft - 1 === 0) {
+        finishGame();
+        return;
+      }
+
+      setTimeLeft((prev) => prev - 1);
+      setStats((prev) => ({
+        ...prev,
+        wpm: calculateWpm(typed, sentence, startTime),
+      }));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isRunning, timeLeft, startTime, finishGame, typed, sentence]);
+
+  // Referente a atualizar variáveis, precisão, PPM e se o jogo foi finalizado
+  useEffect(() => {
+    const newWpm = startTime ? calculateWpm(typed, sentence, startTime) : 0;
+    const finished = typed.length === sentence.length;
+
+    setStats((prev) => ({
+      ...prev,
+      accuracy: calculateAccuracy(typed, sentence),
+      wpm: newWpm,
+      isFinished: finished,
+    }));
+
+    if (finished) setIsRunning(false);
+  }, [typed, sentence, startTime]);
+
+  useEffect(() => {
+    if (!stats.isFinished) return;
+
+    if (stats.wpm > record) {
+      setRecord(stats.wpm);
+      localStorage.setItem("record", stats.wpm.toString());
+    }
+  }, [stats, record]);
 
   return (
     <GameContext.Provider
       value={{
         sentence,
-        wpm,
-        setWpm,
-        accuracy,
-        setAccuracy,
+        stats,
         typed,
         setTyped,
         difficulty,
@@ -99,7 +134,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         startGame,
         resetGame,
         isRunning,
-        isFinished,
+        record,
       }}
     >
       {children}

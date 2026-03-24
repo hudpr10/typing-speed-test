@@ -4,8 +4,8 @@ import TypingContainer from "@/components/screens/TypingContainer/intex";
 import { useGame } from "@/context/GameContext";
 
 export default function Home() {
-  const { isFinished } = useGame();
+  const { stats } = useGame();
 
-  if (isFinished) return <Result />;
+  if (stats.isFinished) return <Result />;
   return <TypingContainer />;
 }

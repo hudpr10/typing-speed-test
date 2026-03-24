@@ -46,7 +46,7 @@ export default function TypingField() {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isRunning]);
+  }, [isRunning, startGame]);
 
   return (
     <div>
@@ -81,7 +81,7 @@ export default function TypingField() {
         })}
 
         {!isRunning && (
-          <div className="absolute inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center flex-col">
+          <div className="absolute inset-0 backdrop-blur-sm bg-background/80 flex items-center justify-center flex-col">
             <Button handleClick={startGame}>Começar Typing Text</Button>
             <span className="text-base mt-2">
               ou pressione &quot;Espaço&quot; para começar
@@ -93,7 +93,7 @@ export default function TypingField() {
       {isRunning && (
         <div className="flex justify-center mt-4">
           <Button handleClick={resetGame} style="ghost">
-            Recomeçar <Restart />
+            Recomeçar <Restart fill="#fff" />
           </Button>
         </div>
       )}
