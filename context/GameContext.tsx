@@ -69,7 +69,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   }
 
   function resetGame() {
-    setIsRunning(false);
+    finishGame();
     setTimeLeft(60);
     setStartTime(null);
     setTyped("");

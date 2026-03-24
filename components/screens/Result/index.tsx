@@ -2,8 +2,28 @@ import Button from "@/components/ui/Button";
 import Completed from "@/components/ui/icons/Completed";
 import Restart from "@/components/ui/icons/Restart";
 import ResultCard from "@/components/ui/ResultCard";
+import { useGame } from "@/context/GameContext";
 
 export default function Result() {
+  const { wpm, accuracy, typed, sentence } = useGame();
+
+  function getCorrectAndWrongChars(typed: string, sentence: string) {
+    const chars = {
+      correct: 0,
+      wrong: 0,
+    };
+
+    for (let i = 0; i < sentence.length; i++) {
+      if (sentence[i] === typed[i]) {
+        chars.correct++;
+      } else {
+        chars.wrong++;
+      }
+    }
+
+    return chars;
+  }
+
   return (
     <div className="flex flex-col items-center">
       <Completed />
@@ -16,8 +36,12 @@ export default function Result() {
       </div>
 
       <ul className="flex gap-4 mt-8">
-        <ResultCard label="PPM" value="92" style="wpm" />
-        <ResultCard label="Precisão" value="90%" style="accuracy" />
+        <ResultCard label="PPM" value={wpm.toString()} style="wpm" />
+        <ResultCard
+          label="Precisão"
+          value={`${accuracy.toString()}%`}
+          style="accuracy"
+        />
         <ResultCard label="Caracteres" value="120/5" style="characters" />
       </ul>
 
