@@ -14,6 +14,11 @@ export default function TypingField() {
     setTyped(e.target.value);
   }
 
+  function startOnClick() {
+    inputRef.current?.focus();
+    startGame();
+  }
+
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     const blockedKeys = [
       "ArrowRight",
@@ -82,7 +87,7 @@ export default function TypingField() {
 
         {!isRunning && (
           <div className="absolute inset-0 backdrop-blur-sm bg-background/80 flex items-center justify-center flex-col">
-            <Button handleClick={startGame}>Começar Typing Text</Button>
+            <Button handleClick={startOnClick}>Começar Typing Text</Button>
             <span className="text-base mt-2">
               ou pressione &quot;Espaço&quot; para começar
             </span>

@@ -16,6 +16,8 @@ type GameStats = {
   isFinished: boolean;
 };
 
+type FinishType = "first" | "record" | "normal" | null;
+
 type GameContextType = {
   sentence: string;
   stats: GameStats;
@@ -28,6 +30,7 @@ type GameContextType = {
   timeLeft: number;
   isRunning: boolean;
   record: number;
+  finishType: FinishType;
 
   startGame: () => void;
   resetGame: () => void;
@@ -36,7 +39,8 @@ type GameContextType = {
 const GameContext = createContext({} as GameContextType);
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
-  const sentence = "Fim.";
+  const sentence =
+    "As amostras de vírus que teriam sido furtadas do laboratório de virologia da Unicamp foram retiradas de uma área de nível 3 de biossegurança (NB-3), que exige protocolos rigorosos e é, atualmente, o nível mais alto possível para se estudar agentes infecciosos (como vírus e bactérias) em laboratórios no Brasil.";
 
   const [stats, setStats] = useState<GameStats>({
     wpm: 0,
@@ -52,10 +56,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [timeLeft, setTimeLeft] = useState(60);
   const [isRunning, setIsRunning] = useState(false);
 
-  const [record, setRecord] = useState<number>(() => {
-    const storage = localStorage.getItem("record") ?? -1;
-    return Number(storage);
-  });
+  const [finishType, setFinishType] = useState<FinishType>(null);
+  const [record, setRecord] = useState<number>(0);
+  const [isMounted, setIsMounted] = useState(false);
 
   function startGame() {
     if (!isRunning) setIsRunning(true);
@@ -110,14 +113,32 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     if (finished) setIsRunning(false);
   }, [typed, sentence, startTime]);
 
+  // Corrige o record para quando a pagina carregar
   useEffect(() => {
-    if (!stats.isFinished) return;
+    const storage = localStorage.getItem("highScore") ?? -1;
+    setRecord(Number(storage));
+    setIsMounted(true);
+  }, []);
 
-    if (stats.wpm > record) {
-      setRecord(stats.wpm);
-      localStorage.setItem("record", stats.wpm.toString());
+  // Atualizar Record
+  useEffect(() => {
+    if (!stats.isFinished || !isMounted) {
+      setFinishType(null);
+      return;
     }
-  }, [stats, record]);
+
+    if (record === -1) {
+      setFinishType("first");
+      setRecord(stats.wpm);
+      localStorage.setItem("highScore", stats.wpm.toString());
+    } else if (stats.wpm > record) {
+      setFinishType("record");
+      setRecord(stats.wpm);
+      localStorage.setItem("highScore", stats.wpm.toString());
+    } else {
+      setFinishType("normal");
+    }
+  }, [stats.isFinished, isMounted]);
 
   return (
     <GameContext.Provider
@@ -135,6 +156,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         resetGame,
         isRunning,
         record,
+        finishType,
       }}
     >
       {children}
