@@ -26,7 +26,7 @@ type GameContextType = {
   difficulty: Difficulty;
   setDifficulty: (value: Difficulty) => void;
   gameMode: GameMode;
-  setGameMode: (value: GameMode) => void;
+  changeGameMode: (mode: GameMode) => void;
   timeLeft: number;
   isRunning: boolean;
   record: number;
@@ -78,6 +78,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setStats({ wpm: 0, accuracy: 0, isFinished: false });
   }
 
+  function changeGameMode(mode: GameMode) {
+    setGameMode(mode);
+    if (mode === "sentence") setTimeLeft(0);
+    if (mode === "time") setTimeLeft(60);
+  }
+
   // Referente ao tempo decorrido
   useEffect(() => {
     if (!isRunning || !startTime) return;
@@ -88,7 +94,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      setTimeLeft((prev) => prev - 1);
+      if (gameMode === "sentence") setTimeLeft((prev) => prev + 1);
+      if (gameMode === "time") setTimeLeft((prev) => prev - 1);
+
       setStats((prev) => ({
         ...prev,
         wpm: calculateWpm(typed, sentence, startTime),
@@ -96,7 +104,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft, startTime, finishGame, typed, sentence]);
+  }, [isRunning, timeLeft, startTime, finishGame, typed, sentence, gameMode]);
 
   // Referente a atualizar variáveis, precisão, PPM e se o jogo foi finalizado
   useEffect(() => {
@@ -150,7 +158,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         difficulty,
         setDifficulty,
         gameMode,
-        setGameMode,
+        changeGameMode,
         timeLeft,
         startGame,
         resetGame,

@@ -6,33 +6,30 @@ import { Difficulty, GameMode } from "@/types/game";
 import timeFormat from "@/utils/timeFormat";
 
 export default function TypingLabel() {
-  const { stats, setDifficulty, gameMode, setGameMode, timeLeft } = useGame();
+  const { stats, setDifficulty, changeGameMode, timeLeft } = useGame();
 
   return (
     <div className="flex items-center justify-between">
       <ul className="flex divide-x divide-gray-400 gap-4">
-        <li className="pr-4">
+        <li className="w-20">
           <p className="text-gray-400">
             PPM: <strong className="text-white">{stats.wpm}</strong>
           </p>
         </li>
-        <li className="pr-4">
+        <li className="w-36">
           <p className="text-gray-400">
             Precisão: <strong className="text-white">{stats.accuracy}%</strong>
           </p>
         </li>
-        {gameMode === "time" && (
-          <li>
-            <p className="text-gray-400">
-              Tempo:{" "}
-              <strong
-                className={timeLeft <= 10 ? "text-red-500" : "text-white"}
-              >
-                {timeFormat(timeLeft)}
-              </strong>
-            </p>
-          </li>
-        )}
+
+        <li>
+          <p className="text-gray-400">
+            Tempo:{" "}
+            <strong className={timeLeft <= 10 ? "text-red-500" : "text-white"}>
+              {timeFormat(timeLeft)}
+            </strong>
+          </p>
+        </li>
       </ul>
 
       <div className="flex gap-4 divide-x divide-gray-400">
@@ -62,7 +59,7 @@ export default function TypingLabel() {
                   id={id}
                   name="mode"
                   label={label}
-                  handleChange={(e) => setGameMode(e.target.id as GameMode)}
+                  handleChange={(e) => changeGameMode(e.target.id as GameMode)}
                   isDefault={isDefault}
                 />
               </li>
